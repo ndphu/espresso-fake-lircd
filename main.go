@@ -9,13 +9,14 @@ import (
 
 var (
 	Port            = 8765
-	SendIntervalMin = 6  // 6 seconds
-	SendIntervalMax = 10 // 10 seconds
+	SendIntervalMin = 2  // 2 seconds
+	SendIntervalMax = 10 // 20 seconds
 )
 
 func main() {
 	rand.Seed(time.Now().Unix())
-	answers := []string{
+	remoteNames := []string{
+		"Remote000",
 		"Remote001",
 		"Remote002",
 		"Remote003",
@@ -37,18 +38,6 @@ func main() {
 		"Remote019",
 		"Remote020",
 	}
-	buttons := []string{
-		"NUM_1",
-		"NUM_2",
-		"NUM_3",
-		"NUM_4",
-		"NUM_5",
-		"NUM_6",
-		"NUM_7",
-		"NUM_8",
-		"NUM_9",
-		"NUM_0",
-	}
 	fmt.Println("A fake lircd which open a port and send fake lircd message to clients which connect to it")
 
 	fmt.Println("Using port", Port)
@@ -68,8 +57,11 @@ func main() {
 
 		go func() {
 			for {
-				fmt.Println("Sending message...")
-				_, err := conn.Write([]byte(fmt.Sprintf("0000000000000009 %d %s %s\n", rand.Intn(100), buttons[rand.Intn(len(buttons))], answers[rand.Intn(len(answers))])))
+				repeat := rand.Intn(100)
+				button := buttons[rand.Intn(len(buttons))]
+				remoteName := remoteNames[rand.Intn(len(remoteNames))]
+				fmt.Println("Sending event", remoteName, button, repeat)
+				_, err := conn.Write([]byte(fmt.Sprintf("0000000000f40bf0 %x %s %s\n", repeat, button, remoteName)))
 				if err != nil {
 					fmt.Println("Failed to write with error", err)
 					break
