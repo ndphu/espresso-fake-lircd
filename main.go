@@ -9,33 +9,23 @@ import (
 
 var (
 	Port            = 8765
-	SendIntervalMin = 2 // 2 seconds
-	SendIntervalMax = 3 // 20 seconds
+	SendIntervalMin = 2  // 2 seconds
+	SendIntervalMax = 10 // 20 seconds
 )
 
 func main() {
 	rand.Seed(time.Now().Unix())
-	answers := []string{
-		"It_is_certain",
-		"It_is_decidedly_so",
-		"Without_a_doubt",
-		"Yes_definitely",
-		"You_may_rely_on_it",
-		"As_I_see_it_yes",
-		"Most_likely",
-		"Outlook_good",
-		"Yes",
-		"Signs_point_to_yes",
-		"Reply_hazy_try_again",
-		"Ask_again_later",
-		"Better_not_tell_you_now",
-		"Cannot_predict_now",
-		"Concentrate_and_ask_again",
-		"Don't_count_on_it",
-		"My_reply_is_no",
-		"My_sources_say_no",
-		"Outlook_not_so_good",
-		"Very_doubtful",
+	remoteNames := []string{
+		"Remote000",
+		"Remote001",
+		"Remote002",
+		"Remote003",
+		"Remote004",
+		"Remote005",
+		"Remote006",
+		"Remote007",
+		"Remote008",
+		"Remote009",
 	}
 	buttons := []string{
 		"NUM_1",
@@ -68,8 +58,11 @@ func main() {
 
 		go func() {
 			for {
-				fmt.Println("Sending message...")
-				_, err := conn.Write([]byte(fmt.Sprintf("0000000000000009 %d %s %s\n", rand.Intn(100), buttons[rand.Intn(len(buttons))], answers[rand.Intn(len(answers))])))
+				repeat := rand.Intn(100)
+				button := buttons[rand.Intn(len(buttons))]
+				remoteName := remoteNames[rand.Intn(len(remoteNames))]
+				fmt.Println("Sending event", remoteName, button, repeat)
+				_, err := conn.Write([]byte(fmt.Sprintf("0000000000f40bf0 %x %s %s\n", repeat, button, remoteName)))
 				if err != nil {
 					fmt.Println("Failed to write with error", err)
 					break
