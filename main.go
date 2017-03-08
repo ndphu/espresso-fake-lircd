@@ -69,7 +69,7 @@ func main() {
 
 		go func() {
 			for {
-				repeat := rand.Intn(100)
+				repeat := 0
 				button := buttons[rand.Intn(len(buttons))]
 				remoteName := remoteNames[rand.Intn(len(remoteNames))]
 				fmt.Println("Sending event", remoteName, button, repeat)
